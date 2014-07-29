@@ -19,7 +19,7 @@ ADD routes.yaml /etc/puppet/routes.yaml
 ADD hiera.yaml /etc/hiera.yaml
 
 RUN (start-stop-daemon --start -b --exec /usr/sbin/mysqld && sleep 5 ; echo "create database dashboard character set utf8;" | mysql -u root)
-RUN (start-stop-daemon --start -b --exec /usr/sbin/mysqld && sleep 5 ; echo "create user dashboard@'localhost' identified by '1q2w3e4r5t';" | mysql -u root)
+RUN (start-stop-daemon --start -b --exec /usr/sbin/mysqld && sleep 5 ; echo "create user dashboard@'localhost' identified by '2PJXWACQS7';" | mysql -u root)
 RUN (start-stop-daemon --start -b --exec /usr/sbin/mysqld && sleep 5 ; echo "grant all on dashboard.* to dashboard@'%';" | mysql -u root)
 ADD database.yml /usr/share/puppet-dashboard/config/database.yml
 RUN (start-stop-daemon --start -b --exec /usr/sbin/mysqld && cd /usr/share/puppet-dashboard && RAILS_ENV=production rake db:migrate)
