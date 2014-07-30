@@ -1,12 +1,26 @@
-FROM ubuntu:12.04
+FROM ubuntu:14.04
 MAINTAINER Arcus "http://arcus.io"
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe multiverse" > /etc/apt/sources.list
+RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe multiverse" > /etc/apt/sources.list
 RUN apt-get update
 RUN apt-get install -y wget
-RUN wget -q http://apt.puppetlabs.com/puppetlabs-release-precise.deb -O /tmp/puppetlabs.deb
+RUN wget -q http://apt.puppetlabs.com/puppetlabs-release-trusty.deb -O /tmp/puppetlabs.deb
 RUN dpkg -i /tmp/puppetlabs.deb
 RUN apt-get update
-RUN apt-get -y install puppetmaster-passenger puppet-dashboard puppetdb puppetdb-terminus redis-server supervisor openssh-server net-tools mysql-server
+RUN apt-get -y install mysql-client-5.5 libdbd-mysql-perl libdbi-perl
+#RUN apt-get -y install puppetmaster-passenger puppet-dashboard puppetdb puppetdb-terminus redis-server supervisor openssh-server net-tools mysql-server mysql-client
+RUN apt-get --force-yes -y install tzdata=2014b-1
+RUN apt-get -y install puppetmaster-passenger puppetdb puppetdb-terminus redis-server supervisor openssh-server net-tools mysql-server mysql-client openjdk-7-jre-headless tzdata-java
+RUN apt-get -y install git ruby2.0
+RUN ln -s /usr/bin/gem2.0 /usr/bin/gem -f
+RUN ln -s /usr/bin/ruby2.0 /usr/bin/ruby -f
+RUN git clone git://github.com/puppetlabs/puppet-dashboard.git /usr/share/puppet-dashboard
+
+#no puppet-dashboard package, so we must do it manually
+RUN useradd puppet-dashboard
+#RUN cd /usr/share/puppet-dashboard && git fetch && git checkout v1.2.0 && chown -R puppet-dashboard:puppet-dashboard /usr/share/puppet-dashboard && bundle install
+RUN cd /usr/share/puppet-dashboard && gem install bundle
+RUN cd /usr/share/puppet-dashboard && gem install eventmachine
+RUN cd /usr/share/puppet-dashboard && chown -R puppet-dashboard:puppet-dashboard /usr/share/puppet-dashboard && bundle install
 RUN gem install --no-ri --no-rdoc hiera hiera-puppet redis hiera-redis hiera-redis-backend
 RUN echo "127.0.0.1 localhost puppet puppetdb puppetdb.local puppet.local" > /etc/hosts
 RUN mkdir /var/run/sshd
