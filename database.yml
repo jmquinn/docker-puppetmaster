@@ -1,7 +1,7 @@
 production:
     database: dashboard
     username: dashboard
-    password: 2PJXWACQS7
+    password: 12345
     encoding: utf8
     adapter: mysql
     host: 127.0.0.1
